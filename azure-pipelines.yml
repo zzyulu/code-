@@ -1,0 +1,140 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>  // for rand() and srand()
+#include <ctime>    // for time()
+#include <limits>   // for std::numeric_limits
+#include <iomanip>  // for std::setw
+
+using namespace std;
+
+// Function to simulate playing music
+void playMusic() {
+    cout << "Music is playing..." << endl;
+    // You can add actual music playing logic here
+}
+
+// Function to simulate stopping music
+void stopMusic() {
+    cout << "Music stops!" << endl;
+}
+
+// Function to display player instructions
+void displayInstructions() {
+    cout << "Welcome to Musical Chairs!" << endl;
+    cout << "Instructions:" << endl;
+    cout << "- Click on the player of your choice." << endl;
+    cout << "- While the music is playing, place the mouse pointer on the chair you want your player to sit in." << endl;
+    cout << "- Press space bar to start the game." << endl;
+}
+
+// Function to simulate player interaction before the game starts
+void playerSelected(string playerName) {
+    cout << playerName << ": Ok, let's win this game!!" << endl;
+}
+
+// Function to simulate player reaction when losing
+void playerLost(string playerName) {
+    cout << playerName << ": Oh no, give me a chance to win!" << endl;
+}
+
+// Function to get player choice (dummy implementation, replace with actual input handling)
+int getPlayerChoice(int numPlayers) {
+    int playerChoice;
+    cout << "Pick a player (1-" << numPlayers << "): ";
+    cin >> playerChoice;
+    // Basic input validation
+    while (playerChoice < 1 || playerChoice > numPlayers || cin.fail()) {
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Invalid input. Pick a player (1-" << numPlayers << "): ";
+        cin >> playerChoice;
+    }
+    return playerChoice;
+}
+
+// Function to get chair choice (dummy implementation, replace with actual input handling)
+int getChairChoice(int numChairs) {
+    int chairChoice;
+    cout << "Pick a chair (1-" << numChairs << "): ";
+    cin >> chairChoice;
+    // Basic input validation
+    while (chairChoice < 1 || chairChoice > numChairs || cin.fail()) {
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Invalid input. Pick a chair (1-" << numChairs << "): ";
+        cin >> chairChoice;
+    }
+    return chairChoice;
+}
+
+int main() {
+    srand(time(0)); // Seed for random number generation
+
+    // Initial game setup
+    int numPlayers = 6; // Number of players
+    int numChairs = 5; // Number of chairs
+
+    vector<bool> chairs(numChairs, true); // true means chair is available
+
+    // Display game instructions
+    displayInstructions();
+
+    // Select a player
+    int playerChoice = getPlayerChoice(numPlayers);
+    playerSelected("Player " + to_string(playerChoice));
+
+    // Wait for space bar press to start the game
+    cout << "Press space bar to start the game..." << endl;
+    // Placeholder for input handling, assume space bar press starts the game
+    cin.ignore(); // Ignore newline left in the buffer by previous input
+    cin.get();
+
+    // Main game loop
+    int round = 1;
+    while (numChairs > 1) {
+        cout << "Round " << round << ":" << endl;
+        playMusic(); // Start playing music
+
+        // Simulate delay for players to move
+        // Replace with actual delay or event waiting logic
+        for (int i = 0; i < 1000000000; ++i) {}
+
+        stopMusic(); // Stop music suddenly
+
+        // Get player's chosen chair
+        int chairChoice = getChairChoice(numChairs);
+
+        // Determine if the player gets their chosen chair
+        bool getsChosenChair = (rand() % 2 == 0);
+
+        if (getsChosenChair) {
+            cout << "Player " << playerChoice << " sits in chair " << chairChoice << "." << endl;
+        } else {
+            cout << "Player " << playerChoice << " did not get chair " << chairChoice << "." << endl;
+            playerLost("Player " + to_string(playerChoice));
+        }
+
+        // Remove the chosen chair
+        chairs[chairChoice - 1] = false;
+        numChairs--;
+
+        // Display remaining chairs
+        cout << "Remaining chairs: ";
+        for (int i = 0; i < chairs.size(); ++i) {
+            if (chairs[i]) {
+                cout << setw(3) << (i + 1);
+            }
+        }
+        cout << endl;
+
+        // Continue with the next round
+        cout << endl;
+        round++;
+    }
+
+    // Only one chair left, game ends
+    cout << "Game over! One player wins!" << endl;
+
+    return 0;
+}
+
